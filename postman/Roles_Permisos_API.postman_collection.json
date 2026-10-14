@@ -1,0 +1,123 @@
+{
+  "info": {
+    "name": "Roles y Permisos API",
+    "description": "Colección para probar endpoints de gestión de roles y permisos (Spatie) en colegio-api.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Listar roles",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": { "raw": "{{base_url}}/api/roles", "host": [ "{{base_url}}" ], "path": [ "api", "roles" ] }
+      }
+    },
+    {
+      "name": "Crear rol",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"nuevo_rol\"\n}" },
+        "url": { "raw": "{{base_url}}/api/roles", "host": [ "{{base_url}}" ], "path": [ "api", "roles" ] }
+      }
+    },
+    {
+      "name": "Editar rol",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"rol_editado\"\n}" },
+        "url": { "raw": "{{base_url}}/api/roles/1", "host": [ "{{base_url}}" ], "path": [ "api", "roles", "1" ] }
+      }
+    },
+    {
+      "name": "Eliminar rol",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": { "raw": "{{base_url}}/api/roles/1", "host": [ "{{base_url}}" ], "path": [ "api", "roles", "1" ] }
+      }
+    },
+    {
+      "name": "Asignar rol a usuario",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"role\": \"admin\"\n}" },
+        "url": { "raw": "{{base_url}}/api/users/1/roles", "host": [ "{{base_url}}" ], "path": [ "api", "users", "1", "roles" ] }
+      }
+    },
+    {
+      "name": "Quitar rol a usuario",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"role\": \"admin\"\n}" },
+        "url": { "raw": "{{base_url}}/api/users/1/roles", "host": [ "{{base_url}}" ], "path": [ "api", "users", "1", "roles" ] }
+      }
+    },
+    {
+      "name": "Listar permisos",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": { "raw": "{{base_url}}/api/permissions", "host": [ "{{base_url}}" ], "path": [ "api", "permissions" ] }
+      }
+    },
+    {
+      "name": "Crear permiso",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"acceso_finanzas\"\n}" },
+        "url": { "raw": "{{base_url}}/api/permissions", "host": [ "{{base_url}}" ], "path": [ "api", "permissions" ] }
+      }
+    },
+    {
+      "name": "Asignar permiso a rol",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"permission\": \"acceso_finanzas\"\n}" },
+        "url": { "raw": "{{base_url}}/api/roles/1/permissions", "host": [ "{{base_url}}" ], "path": [ "api", "roles", "1", "permissions" ] }
+      }
+    },
+    {
+      "name": "Quitar permiso de rol",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"permission\": \"acceso_finanzas\"\n}" },
+        "url": { "raw": "{{base_url}}/api/roles/1/permissions", "host": [ "{{base_url}}" ], "path": [ "api", "roles", "1", "permissions" ] }
+      }
+    }
+  ]
+}

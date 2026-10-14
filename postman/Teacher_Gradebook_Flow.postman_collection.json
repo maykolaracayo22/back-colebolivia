@@ -1,0 +1,145 @@
+{
+  "info": {
+    "name": "Teacher Gradebook Flow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Flujo completo para que un docente ingrese y cargue notas en un acta. Secuencia: Login → Crear Acta (si no existe) → Crear Evaluación → Crear/Actualizar Notas y Auto/PE → Recomputar → Lock → Publish (requiere permiso adicional)."
+  },
+  "item": [
+    {
+      "name": "Login (teacher)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api","login"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"teacher1@example.com\",\n  \"password\": \"password\",\n  \"device\": \"postman-teacher\"\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Actas (own teacher)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/actas?year=2025&term=T1", "host": ["{{baseUrl}}"], "path": ["api","actas"], "query": [
+          {"key": "year", "value": "2025"},
+          {"key": "term", "value": "T1"}
+        ]}
+      },
+      "response": []
+    },
+    {
+      "name": "Create Acta (if missing)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/actas", "host": ["{{baseUrl}}"], "path": ["api","actas"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"year\": 2025,\n  \"nivel\": \"primaria\",\n  \"grado\": 2,\n  \"seccion\": \"A\",\n  \"term\": \"T1\",\n  \"materia_id\": {{subject_id}},\n  \"materia_nombre\": \"Matemáticas\",\n  \"docente_id\": {{teacher_id}},\n  \"docente_nombre\": \"Prof X\"\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Evaluation (ActaEvaluation)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/acta-evaluations", "host": ["{{baseUrl}}"], "path": ["api","acta-evaluations"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"acta_id\": {{acta_id}},\n  \"nombre\": \"P1\",\n  \"peso\": 0\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Save Items (Notas + Auto + PE)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/actas/{{acta_id}}/items", "host": ["{{baseUrl}}"], "path": ["api","actas","{{acta_id}}","items"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"notes\": [\n    { \"student_id\": {{student_id}}, \"evaluation_id\": {{evaluation_id}}, \"valor\": 8 }\n  ],\n  \"auto\": [ { \"student_id\": {{student_id}}, \"valor\": 1 } ],\n  \"pe\":   [ { \"student_id\": {{student_id}}, \"valor\": 5 } ]\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Recompute Acta Aggregates",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/actas/{{acta_id}}/recompute", "host": ["{{baseUrl}}"], "path": ["api","actas","{{acta_id}}","recompute"]}
+      },
+      "response": []
+    },
+    {
+      "name": "Lock Acta (DRAFT → LOCKED)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/actas/{{acta_id}}/lock", "host": ["{{baseUrl}}"], "path": ["api","actas","{{acta_id}}","lock"]}
+      },
+      "response": []
+    },
+    {
+      "name": "Publish Acta (LOCKED → PUBLISHED)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/actas/{{acta_id}}/publish", "host": ["{{baseUrl}}"], "path": ["api","actas","{{acta_id}}","publish"]}
+      },
+      "response": []
+    },
+    {
+      "name": "Show Acta (Check status & notes)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/api/actas/{{acta_id}}", "host": ["{{baseUrl}}"], "path": ["api","actas","{{acta_id}}"]}
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {"exec": ["// Puedes agregar lógica para refrescar token"], "type": "text/javascript"}
+    }
+  ],
+  "variable": [
+    {"key": "token", "value": ""},
+    {"key": "baseUrl", "value": "http://localhost:8000"},
+    {"key": "teacher_id", "value": "1"},
+    {"key": "subject_id", "value": "1"},
+    {"key": "acta_id", "value": "1"},
+    {"key": "student_id", "value": "1"},
+    {"key": "evaluation_id", "value": "1"}
+  ]
+}
